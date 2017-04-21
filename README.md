@@ -1,37 +1,15 @@
-## Welcome to GitHub Pages
+## 데이터 분석했던것들을 모아둔 저장소 입니다.
+Kaggle, 데이터 과학에서 했던 분석들을 모으고 있습니다.
+사용된 언어는 Python, R입니다.
 
-You can use the [editor on GitHub](https://github.com/Hyunsik-Yoo/Data_Analysis/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### WordCloud [Link](https://hyunsik-yoo.github.io/Data_Analysis/wordcloud)
+미국 부시 전 대통령과 오바마 전 대통령이 했던 연설문을 텍스트형태로 수집하여 WordCloud를 그리는
+과정입니다.
 
-### Markdown
+### Edx [Link](https://hyunsik-yoo.github.io/Data_Analysis/kaggle/edx/edx)
+Kaggle의 Edx데이터를 사용해 데이터분석을 한 결과입니다.
+두개 기관의 수강생비교, 수강생별 달성률, 수료확률에 영향을 미치는 요소들을 분석하였습니다.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Hyunsik-Yoo/Data_Analysis/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
 
 Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
