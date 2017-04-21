@@ -1,0 +1,144 @@
+---
+title: "How to raise the number of participants?"
+author: "Hyunsik Yoo"
+date: "4/1/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(grid)
+library(gridExtra)
+setwd('/home/dbgustlr92/kaggle/edx')
+edx_csv <- read.csv('appendix.csv')
+
+# Multiple plot function
+#
+# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+# - cols:   Number of columns in layout
+# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+#
+# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+# then plot 1 will go in the upper left, 2 will go in the upper right, and
+# 3 will go all the way across the bottom.
+#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  require(grid)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+```
+## How many lectures did each institution have?
+### The number of course by Institution 
+```{r, echo=FALSE}
+ggplot(edx_csv, aes(edx_csv$Institution)) + geom_bar(aes(fill=edx_csv$Institution)) +
+  xlab('Institution') + ylab('Count') + guides(fill=FALSE)
+```
+
+The number of lectures in MIT is greater than Harvard.
+
+
+## Did the number of lectures increase?
+```{r , echo=FALSE}
+# The number of course by Year and Subject
+harvardX <- edx_csv[edx_csv$Institution=="HarvardX",]
+mitX <- edx_csv[edx_csv$Institution!="HarvardX",]
+harvard <-ggplot(harvardX, aes(harvardX$Year)) + geom_bar(aes(fill=harvardX$Course.Subject), position='dodge') + xlab('Year') + ylab('Count') + labs(title='Harvard',fill='Institution')
+
+mit <- ggplot(mitX, aes(mitX$Year)) + geom_bar(aes(fill=mitX$Course.Subject), position='dodge') + xlab('Year') + ylab('Count') + labs(title='MIT',fill='Institution')
+multiplot(harvard,mit)
+```
+
+There isn't lectures about _Scienc, Technology, Engineering and Mathematics_ in Harvard first year. Each institution look like they has a special lecture. The number of _Humanities, History, Design, Religion and Education_ lectures is increased extreamly in __Harvard__. in __MIT__, The number of _Science, Technology, Engineering and Mathematics_ lectures is increased extreamly.
+
+```{r, echo=FALSE}
+# The number of course by Subject and Institution
+ggplot(edx_csv, aes(edx_csv$Course.Subject)) + geom_bar(aes(fill=edx_csv$Institution)) +
+  xlab('Subject') + ylab('Count)') + labs(fill='Institution') +
+  theme(text = element_text(size=5), axis.text.x = element_text(angle=0))
+```
+
+This graph also means that __Harvard__ forcus on _Humanities, History, Design, Religion and Education_ and __MIT__ forcus on _Science, Technology, Engineering and Mathematics_.
+
+
+## Posting in Forum and Total Course Hours is affected Certificated?
+I was very curious about the factors that affect certification. So I analyzed it using several factors.
+
+* Total Course Hours
+* Posted in Forum(%)
+
+### Total Course Hours
+First, We analyzed about density of __Total Course Hours__ by Subject.  
+
+#### Density of Total Course Hours by Subject
+
+```{r, echo=FALSE}
+# Density of Total Course Hours by Subject  
+ggplot(edx_csv, aes(edx_csv$Total.Course.Hours..Thousands., colour=edx_csv$Course.Subject)) + 
+  geom_density() + labs(x='Total Course Hours', y='Density', colour='Subject') 
+```
+
+There are many lectures that have shorter course hours in _Humanities, History, Design, Religion and Education_. All of lecture shorter than 250. and 90% of lectures shorter than 100.
+On the other hand, Lectures on computer science range from short lectures to long lectures.
+
+#### Is Total Course Hours affect certification ratio? 
+```{r, echo=FALSE}
+ggplot(edx_csv, aes(x=edx_csv$Total.Course.Hours..Thousands., y=edx_csv$X..Certified)) +
+  geom_point(colour='grey') + labs(x='Total Course Hours', y='Certified(%)') + geom_smooth()
+```
+
+All of  lectures with a _Certification rate_ higher than 10% have less then 70hours.(Blue line is mean of __Certified__.) __Total Course Hours__ affects certain points. The __Certification rate__ is reduced to 5% constantly. However, __Certification rate__ is not affected to lectures that __Total Course Hours__ is greater than 80. 
+
+```{r, echo=FALSE}
+
+# Posting in Forum and Total Course Hours is affected Certificated?
+ggplot(edx_csv, aes(edx_csv$Total.Course.Hours..Thousands., edx_csv$X..Posted.in.Forum)) +
+  geom_point(aes(colour=edx_csv$X..Certified)) +scale_colour_gradient(high = "green") +
+  labs(list(x='Total Course Hours', y='Posted in Forum(%)', colour='Certificated(%)'))
+```
+
+This graph also shows that the __Total Course Hours__ affects the __certification rate__. 
+And the higher the posting rate, the higher the certification rate. This means that Students get a lot of help from the forums. Also there are lots of useful information on lectures on the forum.
+
+
+### Do students consider the entire lecture time before start?
+
+```{r, echo=FALSE}
+# Relationship between Total Course Hours and Participants
+ggplot(edx_csv, aes(x=edx_csv$Total.Course.Hours..Thousands., y=edx_csv$Participants..Course.Content.Accessed.)) +
+  geom_point(aes(colour=edx_csv$Course.Subject)) +
+  labs(x='Total Course Hours', y='Number of Participants', colour='Subject')
+```
+
+Except _Computer Science_ lectures, students consider __Total Course Hours__. There are few participants in very short lectures and few participants in very long lectures. However, There are many participants in some of __Computer Science__ lectures regardless of lecture time.
